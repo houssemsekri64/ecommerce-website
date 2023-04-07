@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useCallback, useMemo, Suspense } from "react";
 import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import { NavigateBefore, NavigateNext } from "@mui/icons-material";
 import { shades } from "../../theme";
+import Image from "../../components/Image";
+
 // imports all images from assets folder
 const importAll = (r) =>
   r.keys().reduce((acc, item) => {
@@ -14,18 +16,19 @@ const importAll = (r) =>
 export const heroTextureImports = importAll(
   require.context("../../assets", false, /\.(png|jpe?g|svg)$/)
 );
-console.log(heroTextureImports);
+
 function MainCarousel() {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  return (
-    <Carousel
-      infiniteLoop={true}
-      showThumbs={false}
-      showIndicators={false}
-      showStatus={false}
-      autoPlay={true}
-      renderArrowPrev={(onClickHander, hasPrev, label) => {
+  // Use useMemo to prevent re-rendering the component on every render
+  const memoizedCarouselProps = useMemo(() => {
+    return {
+      infiniteLoop: true,
+      showThumbs: false,
+      showIndicators: false,
+      showStatus: false,
+      autoPlay: true,
+      renderArrowPrev: (onClickHander, hasPrev, label) => {
         return (
           <IconButton
             onClick={onClickHander}
@@ -41,8 +44,8 @@ function MainCarousel() {
             <NavigateBefore sx={{ fontSize: "40px" }} />
           </IconButton>
         );
-      }}
-      renderArrowNext={(onClickHander, hasNext, label) => {
+      },
+      renderArrowNext: (onClickHander, hasNext, label) => {
         return (
           <IconButton
             onClick={onClickHander}
@@ -58,17 +61,22 @@ function MainCarousel() {
             <NavigateNext sx={{ fontSize: "40px" }} />
           </IconButton>
         );
-      }}
-    >
-      {Object.values(heroTextureImports).map((texture, index) => {
-        return (
+      },
+    };
+  }, []);
+
+  // Use useCallback to memoize the image rendering function
+  const memoizedRenderImage = useCallback(
+    (texture, index) => (
+      <Box key={`carousel-img-${index}`}>
+        <Suspense fallback={<div>Loading...</div>}>
           <Box key={`carousel-img-${index}`}>
-            <img
+            <Image
               src={texture}
               alt={`carousel-${index}`}
-              style={{
-                width: "100%",
-                height: "700px",
+              width="100%"
+              height="700px"
+              ImageStyle={{
                 objectFit: "cover",
                 backgroundAttachment: "fixed",
               }}
@@ -101,8 +109,17 @@ function MainCarousel() {
               </Typography>
             </Box>
           </Box>
-        );
-      })}
+        </Suspense>
+      </Box>
+    ),
+    [isNonMobile]
+  );
+
+  return (
+    <Carousel {...memoizedCarouselProps}>
+      {Object.values(heroTextureImports).map((texture, index) =>
+        memoizedRenderImage(texture, index)
+      )}
     </Carousel>
   );
 }

@@ -14,11 +14,14 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import {
   deacreaseCount,
+  decreaseCount,
   increaseCount,
   removeFromCart,
   setIsCartOpen,
 } from "../../state";
 import { shades } from "../../theme";
+import { variable } from "../../variable/variable";
+import Image from "../../components/Image";
 
 const FlexBox = styled(Box)({
   display: "flex",
@@ -30,8 +33,8 @@ function CartMenu() {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const isCartOpen = useSelector((state) => state.cart.isCartOpen);
-  const totalPrice = cart.reduce((total, item) => {
-    return total * item.attributes.price;
+  const totalPrice = cart?.reduce((total, item) => {
+    return total + item.count * item.attributes.price;
   }, 0);
   return (
     <Box
@@ -56,68 +59,72 @@ function CartMenu() {
       >
         <Box padding={"30px"} overflow={"auto"} height={"100%"}>
           <FlexBox mb={"15px"}>
-            <Typography variant="h3">Shopping Bag ({cart.length}) </Typography>
+            <Typography variant="h3">Shopping Bag ({cart?.length}) </Typography>
             <IconButton onClick={() => dispatch(setIsCartOpen({}))}>
               {" "}
               <CloseIcon />{" "}
             </IconButton>
           </FlexBox>
           <Box>
-            {cart.map((item) => {
-              <Box key={`${item.attributes.name}-${item.id}`}>
-                <FlexBox p={"15px 0"}>
-                  <Box flex={"1 1 40%"}>
-                    <img
-                      alt={item?.name}
-                      width={"123px"}
-                      height={"164px"}
-                      src={`http:/localhost:1337${item?.attributes?.image?.data?.formats?.medium?.url}`}
-                    />
-                  </Box>
-                  <Box flex={"1 1 60%"}>
-                    <FlexBox mb="5px">
-                      <Typography fontWeight={"bold"}>
-                        {item.attributes.name}
-                      </Typography>
-                      <IconButton
-                        onClick={() =>
-                          dispatch(removeFromCart({ id: item.id }))
-                        }
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </FlexBox>
-                    <Typography>{item.attributes.shortDescription}</Typography>
-                    <FlexBox m="15px 0">
-                      <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        border={`1.5px solid ${shades.neutral[500]}`}
-                      >
+            {cart?.map((item) => {
+              return (
+                <Box key={`${item.attributes.name}-${item.id}`}>
+                  <FlexBox p={"15px 0"}>
+                    <Box flex={"1 1 40%"}>
+                      <Image
+                        alt={item?.name}
+                        width={"123px"}
+                        height={"164px"}
+                        src={`${variable.serverUrl}${item?.attributes?.image?.data?.attributes?.formats?.medium?.url}`}
+                      />
+                    </Box>
+                    <Box flex={"1 1 60%"}>
+                      <FlexBox mb="5px">
+                        <Typography fontWeight={"bold"}>
+                          {item.attributes.name}
+                        </Typography>
                         <IconButton
                           onClick={() =>
-                            dispatch(deacreaseCount({ id: item.id }))
+                            dispatch(removeFromCart({ id: item.id }))
                           }
                         >
-                          <RemoveIcon />
+                          <CloseIcon />
                         </IconButton>
-                        <Typography>{item.count}</Typography>
-                        <IconButton
-                          onClick={() =>
-                            dispatch(increaseCount({ id: item.id }))
-                          }
-                        >
-                          <AddIcon />
-                        </IconButton>
-                      </Box>
-                      <Typography fontWeight={"bold"}>
-                        {item.attributes.price}
+                      </FlexBox>
+                      <Typography>
+                        {item.attributes.shortDescription}
                       </Typography>
-                    </FlexBox>
-                  </Box>
-                </FlexBox>
-                <Divider />
-              </Box>;
+                      <FlexBox m="15px 0">
+                        <Box
+                          display={"flex"}
+                          alignItems={"center"}
+                          border={`1.5px solid ${shades.neutral[500]}`}
+                        >
+                          <IconButton
+                            onClick={() =>
+                              dispatch(decreaseCount({ id: item.id }))
+                            }
+                          >
+                            <RemoveIcon />
+                          </IconButton>
+                          <Typography>{item.count}</Typography>
+                          <IconButton
+                            onClick={() =>
+                              dispatch(increaseCount({ id: item.id }))
+                            }
+                          >
+                            <AddIcon />
+                          </IconButton>
+                        </Box>
+                        <Typography fontWeight={"bold"}>
+                          {item.attributes.price}
+                        </Typography>
+                      </FlexBox>
+                    </Box>
+                  </FlexBox>
+                  <Divider />
+                </Box>
+              );
             })}
           </Box>
           <Box m="20px 0">

@@ -6,7 +6,9 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { shades } from "../theme";
-import { addToCart, deacreaseCount, increaseCount } from "../state";
+import { addToCart } from "../state";
+import { variable } from "../variable/variable";
+import Image from "./Image";
 
 function Item({ item, width }) {
   const navigate = useNavigate();
@@ -33,13 +35,13 @@ function Item({ item, width }) {
         onMouseOver={() => setIsHovered(true)}
         onMouseOut={() => setIsHovered(false)}
       >
-        <img
+        <Image
           alt={item.name}
           width={"300px"}
           height={"400px"}
-          src={`http://localhost:1337${url}`}
+          src={`${variable.serverUrl}${url}`}
           onClick={() => navigate(`/item/${item.id}`)}
-          style={{ cursor: "pointer" }}
+          ImageStyle={{ cursor: "pointer" }}
         />
         <Box
           display={isHovered ? "block" : "none"}

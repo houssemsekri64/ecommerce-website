@@ -3,12 +3,16 @@ const initialState = {
   isCartOpen: false,
   cart: [],
   items: [],
+  loading: false,
 };
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
     setItems: (state, action) => {
       state.items = action.payload;
     },
@@ -16,17 +20,25 @@ export const cartSlice = createSlice({
       state.cart = [...state.cart, action.payload.item];
     },
     removeFromCart: (state, action) => {
-      state.cart = state.cart.filter((el) => el.id !== action.payload.id);
+      state.cart = state.cart.filter((item) => item.id !== action.payload.id);
     },
+
     increaseCount: (state, action) => {
-      state.cart = state.cart.map((el) =>
-        el.id === action.payload.id ? el.count++ : el
-      );
+      state.cart = state.cart.map((item) => {
+        if (item.id === action.payload.id) {
+          item.count++;
+        }
+        return item;
+      });
     },
-    deacreaseCount: (state, action) => {
-      state.cart = state.cart.map((el) =>
-        el.id === action.payload.id && el.count > 1 ? el.count-- : el
-      );
+
+    decreaseCount: (state, action) => {
+      state.cart = state.cart.map((item) => {
+        if (item.id === action.payload.id && item.count > 1) {
+          item.count--;
+        }
+        return item;
+      });
     },
     setIsCartOpen: (state) => {
       state.isCartOpen = !state.isCartOpen;
@@ -38,7 +50,8 @@ export const {
   addToCart,
   removeFromCart,
   increaseCount,
-  deacreaseCount,
+  decreaseCount,
   setIsCartOpen,
+  setLoading,
 } = cartSlice.actions;
 export default cartSlice.reducer;

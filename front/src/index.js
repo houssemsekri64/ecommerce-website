@@ -1,23 +1,34 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
+import { theme } from "./theme";
+import cartReducer from "./state";
+import storage from "redux-persist/lib/storage";
+import { persistReducer, persistStore } from "redux-persist";
 import "./index.css";
 import App from "./App";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { theme } from "./theme";
-import { configureStore } from "@reduxjs/toolkit";
-import cartReducer from "./state";
-import { Provider } from "react-redux";
-const reducer = configureStore({
+import { PersistGate } from "redux-persist/integration/react";
+const persistConfig = {
+  key: "root",
+  storage,
+};
+const persistedReducer = persistReducer(persistConfig, cartReducer);
+const store = configureStore({
   reducer: {
-    cart: cartReducer,
+    cart: persistedReducer,
   },
 });
+const persistor = persistStore(store);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <Provider store={reducer}>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </PersistGate>
   </Provider>
 );

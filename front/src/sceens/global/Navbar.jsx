@@ -52,20 +52,6 @@ function Navbar() {
           columnGap={"20px"}
           zIndex={"2"}
         >
-          <Badge
-            badgeContent={cart.length}
-            color="secondary"
-            invisible={cart.length === 0}
-            sx={{
-              "& .MuiBadge-Badge": {
-                right: 5,
-                top: 5,
-                padding: "0 4px",
-                height: "14px",
-                minWidth: "13px",
-              },
-            }}
-          />
           <IconButton color={"black"}>
             <SearchOutlined />
           </IconButton>
@@ -77,6 +63,20 @@ function Navbar() {
             onClick={() => dispatch(setIsCartOpen({}))}
           >
             <ShoppingBagOutlined />
+            <Badge
+              badgeContent={cart?.length}
+              color="secondary"
+              invisible={cart?.length === 0}
+              sx={{
+                "& .MuiBadge-Badge": {
+                  right: 5,
+                  top: 5,
+                  padding: "0 4px",
+                  height: "14px",
+                  minWidth: "13px",
+                },
+              }}
+            />
           </IconButton>
           <IconButton color={"black"}>
             <MenuOutlined />
