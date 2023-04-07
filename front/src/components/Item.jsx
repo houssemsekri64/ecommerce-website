@@ -28,6 +28,7 @@ function Item({ item, width }) {
       },
     },
   } = image;
+
   return (
     <Box width={width}>
       <Box

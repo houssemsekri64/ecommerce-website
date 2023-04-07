@@ -2,7 +2,7 @@ import React from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
-function Image({ src, alt, ImageStyle, width, height }) {
+function Image({ src, alt, ImageStyle, width, height, onClick }) {
   return (
     <LazyLoadImage
       width={width}
@@ -11,6 +11,7 @@ function Image({ src, alt, ImageStyle, width, height }) {
       alt={alt}
       effect="blur"
       style={ImageStyle}
+      onClick={onClick}
     />
   );
 }
