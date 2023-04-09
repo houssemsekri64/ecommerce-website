@@ -15,6 +15,7 @@ const ScrollToTop = () => {
   return null;
 };
 function App() {
+  console.log(process.env.REACT_APP_SERVER);
   return (
     <div className="App">
       <BrowserRouter>
