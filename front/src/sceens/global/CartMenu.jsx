@@ -75,7 +75,7 @@ function CartMenu() {
                         alt={item?.name}
                         width={"123px"}
                         height={"164px"}
-                        src={`${variable.serverUrl}${item?.attributes?.image?.data?.attributes?.formats?.medium?.url}`}
+                        src={`${process.env.REACT_APP_SERVER}${item?.attributes?.image?.data?.attributes?.formats?.medium?.url}`}
                       />
                     </Box>
                     <Box flex={"1 1 60%"}>

@@ -2,7 +2,7 @@ services:
   - type: web
     name: strapi
     env: node
-    plan: starter
+    plan: free
     buildCommand: yarn install && yarn build
     startCommand: rsync -a public/ /data/public/ && yarn start
     healthCheckPath: /_health
@@ -17,10 +17,12 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_FILENAME
-        value: /data/strapi.db
+        value: .tmp/data.db
       - key: JWT_SECRET
         generateValue: true
       - key: ADMIN_JWT_SECRET
         generateValue: true
       - key: APP_KEYS
         generateValue: true
+      - key: STRIPE_SECRET_KEY
+        value: sk_test_51MuRaQFGxb4Z0jtBRFAOu8CcXb6zIbYp3NjSOrTRa9S8SgfNFVkC7TK03Qh0766nyNdpL6r2T2OMQpOeLlZcun4N003aDGCQqq

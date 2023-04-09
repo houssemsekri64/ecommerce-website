@@ -5,6 +5,7 @@ import { Box, Skeleton } from "@mui/material";
 import Item from "../../../../components/Item";
 
 function ItemGrid({ items, value, loading }) {
+  console.log(items);
   const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
   const filteredItems = useMemo(() => {
     if (value === "all") {
@@ -31,9 +32,10 @@ function ItemGrid({ items, value, loading }) {
           <Skeleton variant="rectangular" width={"100%"} height={"200px"} />
         </>
       )}
-      {filteredItems.map((item) => {
-        return <Item item={item} key={`${item.name}-${item.id}`} />;
-      })}
+      {filteredItems &&
+        filteredItems.map((item) => {
+          return <Item item={item} key={`${item.name}-${item.id}`} />;
+        })}
     </Box>
   );
 }

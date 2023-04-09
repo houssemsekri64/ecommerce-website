@@ -19,15 +19,7 @@ function Item({ item, width }) {
     palette: { neutral },
   } = useTheme();
   const { category, price, name, image } = item.attributes;
-  const {
-    data: {
-      attributes: {
-        formats: {
-          medium: { url },
-        },
-      },
-    },
-  } = image;
+  const url = image.data.attributes.url;
 
   return (
     <Box width={width}>
@@ -40,9 +32,9 @@ function Item({ item, width }) {
           alt={item.name}
           width={"300px"}
           height={"400px"}
-          src={`${variable.serverUrl}${url}`}
+          src={url}
           onClick={() => navigate(`/item/${item.id}`)}
-          ImageStyle={{ cursor: "pointer" }}
+          ImageStyle={{ cursor: "pointer", objectFit: "cover" }}
         />
         <Box
           display={isHovered ? "block" : "none"}
