@@ -6,17 +6,14 @@ import { setItems, setLoading } from "../state";
 function useGetItems() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setLoading(true));
     const getData = async () => {
+      dispatch(setLoading(true));
       try {
         const data = await getItems();
         dispatch(setItems(data.data));
         dispatch(setLoading(false));
       } catch (error) {}
     };
-    setTimeout(() => {
-      getData();
-    }, 3000);
   }, []);
 }
 export default useGetItems;
