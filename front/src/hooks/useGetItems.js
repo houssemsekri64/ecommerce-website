@@ -14,6 +14,7 @@ function useGetItems() {
         dispatch(setLoading(false));
       } catch (error) {}
     };
+    getData();
   }, []);
 }
 export default useGetItems;

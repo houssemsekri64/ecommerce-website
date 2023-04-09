@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Badge, Box, IconButton } from "@mui/material";
+import { Badge, Box, IconButton, Typography } from "@mui/material";
 import {
   MenuOutlined,
   PersonOutline,
@@ -10,6 +10,7 @@ import {
 } from "@mui/icons-material";
 import { shades } from "../../theme";
 import { setIsCartOpen } from "../../state";
+import Image from "../../components/Image";
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -22,7 +23,7 @@ function Navbar() {
       height={"60px"}
       backgroundColor="rgba(255,255,255,0.5)"
       color={"black"}
-      position={"fixed"}
+      position={"sticky"}
       top={"0"}
       left={"0"}
       zIndex={1}
@@ -41,10 +42,15 @@ function Navbar() {
               cursor: "pointer",
             },
           }}
-          color={shades.secondary[500]}
+          color={shades.primary[300]}
           component={"a"}
+          display={"flex"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          gap="10px"
         >
-          Ecommer
+          <Image src="logo192.png" width={"50px"} height={"50px"} />
+          <Typography variant="h3"> Game Store </Typography>
         </Box>
         <Box
           display={"flex"}
@@ -64,9 +70,9 @@ function Navbar() {
           >
             <ShoppingBagOutlined />
             <Badge
-              badgeContent={cart?.length}
+              badgeContent={cart.length}
               color="secondary"
-              invisible={cart?.length === 0}
+              invisible={cart.length === 0}
               sx={{
                 "& .MuiBadge-Badge": {
                   right: 5,
