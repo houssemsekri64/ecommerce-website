@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, Suspense } from "react";
 import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
 import { shades } from "../../theme";
-import Image from "../../components/Image";
+import Image from "../../components/ui/Image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -14,7 +14,7 @@ const importAll = (r) =>
   }, {});
 
 export const heroTextureImports = importAll(
-  require.context("../../assets", false, /\.(png|jpe?g|svg)$/)
+  require.context("../../assets/carousel", false, /\.(png|jpe?g|svg)$/)
 );
 
 function MainCarousel() {
@@ -34,14 +34,15 @@ function MainCarousel() {
     (texture, index) => (
       <Box key={`carousel-img-${index}`}>
         <Box key={`carousel-img-${index}`}>
-          <img
+          <Image
             src={texture}
             alt={`carousel-${index}`}
-            style={{
+            width="100%"
+            height={isNonMobile ? "800px" : "500px"}
+            ImageStyle={{
               objectFit: "cover",
               backgroundAttachment: "fixed",
               width: "100%",
-              height: "900px",
             }}
           />
         </Box>
@@ -51,7 +52,7 @@ function MainCarousel() {
   );
 
   return (
-    <Slider {...settings}>
+    <Slider className="over-follow-hidden" {...settings}>
       {Object.values(heroTextureImports).map((texture, index) =>
         memoizedRenderImage(texture, index)
       )}

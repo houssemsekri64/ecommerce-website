@@ -1,18 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Badge, Box, IconButton, Typography } from "@mui/material";
+import { Badge, Box, IconButton } from "@mui/material";
 import {
   MenuOutlined,
   PersonOutline,
   SearchOutlined,
   ShoppingBagOutlined,
 } from "@mui/icons-material";
-import { shades } from "../../theme";
+
 import { setIsCartOpen } from "../../state";
-import Image from "../../components/Image";
+
+import Logo from "../../components/logo/Logo";
 function Navbar() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   return (
@@ -21,7 +21,7 @@ function Navbar() {
       alignItems={"center"}
       width={"100%"}
       height={"60px"}
-      backgroundColor="rgba(255,255,255,0.5)"
+      backgroundColor="rgba(255,255,255,1)"
       color={"black"}
       position={"sticky"}
       top={"0"}
@@ -29,29 +29,13 @@ function Navbar() {
       zIndex={1}
     >
       <Box
-        width={"80%"}
+        width={{ xs: "95%", md: "80%" }}
         margin={"auto"}
         display={"flex"}
         justifyContent={"space-between"}
         alignItems={"center"}
       >
-        <Box
-          onClick={() => navigate("/")}
-          sx={{
-            "&:hover": {
-              cursor: "pointer",
-            },
-          }}
-          color={shades.primary[300]}
-          component={"a"}
-          display={"flex"}
-          alignItems={"center"}
-          justifyContent={"center"}
-          gap="10px"
-        >
-          <Image src="logo192.png" width={"50px"} height={"50px"} />
-          <Typography variant="h3"> Game Store </Typography>
-        </Box>
+        <Logo />
         <Box
           display={"flex"}
           justifyContent={"space-around"}

@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import { Box, Skeleton } from "@mui/material";
-import Item from "../../../../components/Item";
+import Item from "../../../../components/item/Item";
 
 function ItemGrid({ items, value, loading }) {
   console.log(items);

@@ -1,25 +1,23 @@
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Item from "../../components/Item";
+import Item from "../../components/item/Item";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import { shades } from "../../theme";
 import { addToCart } from "../../state";
-import { useDispatch } from "react-redux";
-import { variable } from "../../variable/variable";
-import Image from "../../components/Image";
+import { useDispatch, useSelector } from "react-redux";
+import Image from "../../components/ui/Image";
+import ItemAction from "../../components/item/ItemAction";
 
 const ItemDetails = () => {
   const dispatch = useDispatch();
   const { itemId } = useParams();
   const [value, setValue] = useState("description");
   const [count, setCount] = useState(1);
-  const [item, setItem] = useState(null);
+  const [item, setItem] = useState();
   const [items, setItems] = useState([]);
+  const cart = useSelector((state) => state.cart.cart);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -50,8 +48,8 @@ const ItemDetails = () => {
   useEffect(() => {
     getItem();
     getItems();
-    console.log(item);
   }, [itemId]); // eslint-disable-line react-hooks/exhaustive-deps
+  console.log(item);
 
   return (
     <Box width="80%" m="80px auto">
@@ -62,7 +60,7 @@ const ItemDetails = () => {
             alt={item?.name}
             width="100%"
             height="100%"
-            src={`${process.env.REACT_APP_SERVER}${item?.attributes?.image?.data?.attributes?.formats?.medium?.url}`}
+            src={item?.attributes.image.data.attributes?.url}
             ImageStyle={{ objectFit: "contain" }}
           />
         </Box>
@@ -70,7 +68,10 @@ const ItemDetails = () => {
         {/* ACTIONS */}
         <Box flex="1 1 50%" mb="40px">
           <Box display="flex" justifyContent="space-between">
-            <Box>Home/Item</Box>
+            <Box>
+              {" "}
+              <Link to={"/"}>Home</Link> /Item/{item?.id}
+            </Box>
             <Box>Prev Next</Box>
           </Box>
 
@@ -82,35 +83,19 @@ const ItemDetails = () => {
             </Typography>
           </Box>
 
-          <Box display="flex" alignItems="center" minHeight="50px">
-            <Box
-              display="flex"
-              alignItems="center"
-              border={`1.5px solid ${shades.neutral[300]}`}
-              mr="20px"
-              p="2px 5px"
-            >
-              <IconButton onClick={() => setCount(Math.max(count - 1, 0))}>
-                <RemoveIcon />
-              </IconButton>
-              <Typography sx={{ p: "0 5px" }}>{count}</Typography>
-              <IconButton onClick={() => setCount(count + 1)}>
-                <AddIcon />
-              </IconButton>
-            </Box>
-            <Button
-              sx={{
-                backgroundColor: "#222222",
-                color: "white",
-                borderRadius: 0,
-                minWidth: "150px",
-                padding: "10px 40px",
-              }}
-              onClick={() => dispatch(addToCart({ item: { ...item, count } }))}
-            >
-              ADD TO CART
-            </Button>
-          </Box>
+          <ItemAction
+            handleAddToCart={() => {
+              if (
+                cart.length > 0 &&
+                cart.find((cartItem) => cartItem.id === item.id)
+              ) {
+                return;
+              }
+              dispatch(addToCart({ item: { ...item, count: 1 } }));
+              return "success";
+            }}
+          />
+
           <Box>
             <Box m="20px 0 5px 0" display="flex">
               <FavoriteBorderOutlinedIcon />
@@ -130,7 +115,7 @@ const ItemDetails = () => {
       </Box>
       <Box display="flex" flexWrap="wrap" gap="15px">
         {value === "description" && (
-          <div>{item?.attributes?.longDescription}</div>
+          <div>{item?.attributes?.longDescrption}</div>
         )}
         {value === "reviews" && <div>reviews</div>}
       </Box>

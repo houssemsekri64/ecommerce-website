@@ -32,6 +32,7 @@ export const shades = {
 
 export const theme = createTheme({
   palette: {
+    mode: "light",
     primary: {
       main: shades.primary[400],
     },

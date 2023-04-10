@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Divider,
+  Drawer,
   IconButton,
   Typography,
   styled,
@@ -12,16 +13,15 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  deacreaseCount,
   decreaseCount,
   increaseCount,
   removeFromCart,
   setIsCartOpen,
 } from "../../state";
 import { shades } from "../../theme";
-import { variable } from "../../variable/variable";
-import Image from "../../components/Image";
+import Image from "../../components/ui/Image";
 
 const FlexBox = styled(Box)({
   display: "flex",
@@ -37,17 +37,10 @@ function CartMenu() {
     return total + item.count * item.attributes.price;
   }, 0);
   return (
-    <Box
-      display={isCartOpen ? "block" : "none"}
-      bgcolor="rgba(0,0,0,0.4)"
-      zIndex={10}
-      width={"100%"}
-      height={"100%"}
-      position={"fixed"}
-      left={"0"}
-      right={"0"}
-      top={"0"}
-      overflow={"auto"}
+    <Drawer
+      anchor="right"
+      open={isCartOpen}
+      onClose={() => dispatch(setIsCartOpen({}))}
     >
       <Box
         position={"fixed"}
@@ -59,14 +52,14 @@ function CartMenu() {
       >
         <Box padding={"30px"} overflow={"auto"} height={"100%"}>
           <FlexBox mb={"15px"}>
-            <Typography variant="h3">Shopping Bag ({cart?.length}) </Typography>
+            <Typography variant="h3">Shopping Bag ({cart.length}) </Typography>
             <IconButton onClick={() => dispatch(setIsCartOpen({}))}>
               {" "}
               <CloseIcon />{" "}
             </IconButton>
           </FlexBox>
           <Box>
-            {cart?.map((item) => {
+            {cart.map((item) => {
               return (
                 <Box key={`${item.attributes.name}-${item.id}`}>
                   <FlexBox p={"15px 0"}>
@@ -75,7 +68,7 @@ function CartMenu() {
                         alt={item?.name}
                         width={"123px"}
                         height={"164px"}
-                        src={`${process.env.REACT_APP_SERVER}${item?.attributes?.image?.data?.attributes?.formats?.medium?.url}`}
+                        src={item?.attributes?.image.data.attributes.url}
                       />
                     </Box>
                     <Box flex={"1 1 60%"}>
@@ -88,7 +81,7 @@ function CartMenu() {
                             dispatch(removeFromCart({ id: item.id }))
                           }
                         >
-                          <CloseIcon />
+                          <DeleteIcon />
                         </IconButton>
                       </FlexBox>
                       <Typography>
@@ -117,7 +110,7 @@ function CartMenu() {
                           </IconButton>
                         </Box>
                         <Typography fontWeight={"bold"}>
-                          {item.attributes.price}
+                          ${item.attributes.price}
                         </Typography>
                       </FlexBox>
                     </Box>
@@ -151,7 +144,7 @@ function CartMenu() {
           </Box>
         </Box>
       </Box>
-    </Box>
+    </Drawer>
   );
 }
 

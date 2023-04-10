@@ -7,8 +7,6 @@ import { shades } from "../../theme";
 import Payment from "./Payment";
 import Shipping from "./Shipping";
 import { loadStripe } from "@stripe/stripe-js";
-import { variable } from "../../variable/variable";
-
 const stripePromise = loadStripe(
   "pk_test_51MuRaQFGxb4Z0jtBTEZCMXLVFF3Y5evg8mQntkb9dd1oKrnxs2F6NGhftPBz8vSEkDMNrvJufgVsmkxuwQyS28z200G4YJ7hjL"
 );
