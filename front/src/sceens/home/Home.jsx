@@ -1,14 +1,13 @@
 import React from "react";
 import MainCarousel from "./MainCarousel";
 import ShoppingList from "./shoppingList";
-import Subscribe from "./Subscribe";
-
+import useGetItems from "../../hooks/useGetItems";
 function Home() {
+  useGetItems();
   return (
     <div className="home">
       <MainCarousel />
       <ShoppingList />
-      <Subscribe />
     </div>
   );
 }

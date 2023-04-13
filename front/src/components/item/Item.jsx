@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTheme } from "@emotion/react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../../state";
@@ -15,11 +15,11 @@ function Item({ item, width }) {
   const {
     palette: { neutral },
   } = useTheme();
-  const { category, price, name, image } = item.attributes;
+  const { category, price, name, image, video } = item.attributes;
   const url = image.data.attributes.url;
 
   return (
-    <Box width={width}>
+    <Paper sx={{ width: width, p: 1, boxShadow: 1, m: 1 }}>
       <Box
         position={"relative"}
         onClick={() => navigate(`/item/${item.id}`)}
@@ -29,7 +29,7 @@ function Item({ item, width }) {
       >
         <Image
           alt={item.name}
-          width={"300px"}
+          width={"100%"}
           height={"400px"}
           src={url}
           ImageStyle={{ cursor: "pointer", objectFit: "cover" }}
@@ -38,14 +38,14 @@ function Item({ item, width }) {
           position={"absolute"}
           top={0}
           backgroundColor={isHover ? "rgba(0,0,0,0.7)" : "rgba(0.0.0.0,0)"}
-          width={"300px"}
+          width={"100%"}
           height={"400px"}
           display={isHover ? "grid" : "none"}
           justifyContent={"center"}
           alignContent={"center"}
         >
-          <Button variant="contained" color="info">
-            <Typography color={"white"} variant="subtitle1">
+          <Button variant="contained" color="secondary">
+            <Typography color={"common.white"} variant="subtitle1">
               More details{" "}
             </Typography>{" "}
           </Button>{" "}
@@ -63,9 +63,10 @@ function Item({ item, width }) {
           dispatch(addToCart({ item: { ...item, count: 1 } }));
           return "success";
         }}
+        videoLink={video}
       />
       <Box mt="3px">
-        <Typography variant="subtitle2" color={neutral.dark}>
+        <Typography variant="subtitle2" color={"common.white"}>
           {category
             .replace(/([A-Z])/g, " $1")
             .replace(/^ ./, (str) => str.toUpperCase())}
@@ -73,7 +74,7 @@ function Item({ item, width }) {
         <Typography> {name} </Typography>
         <Typography fontWeight={"bold"}> ${price} </Typography>
       </Box>
-    </Box>
+    </Paper>
   );
 }
 

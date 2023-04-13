@@ -20,14 +20,6 @@ const Checkout = () => {
   const handleFormSubmit = async (values, actions) => {
     setActiveStep(activeStep + 1);
 
-    // this copies the billing address onto shipping address
-    if (isFirstStep && values.shippingAddress.isSameAddress) {
-      actions.setFieldValue("shippingAddress", {
-        ...values.billingAddress,
-        isSameAddress: true,
-      });
-    }
-
     if (isSecondStep) {
       makePayment(values);
     }
@@ -46,8 +38,9 @@ const Checkout = () => {
       })),
     };
 
-    const response = await fetch(`${process.env.REACT_APP_SERVER}api/orders`, {
+    const response = await fetch(`${process.env.REACT_APP_SERVER}/api/orders`, {
       method: "POST",
+      mode: "cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody),
     });
@@ -61,7 +54,7 @@ const Checkout = () => {
     <Box width="80%" m="100px auto">
       <Stepper activeStep={activeStep} sx={{ m: "20px 0" }}>
         <Step>
-          <StepLabel>Billing</StepLabel>
+          <StepLabel>Shipping</StepLabel>
         </Step>
         <Step>
           <StepLabel>Payment</StepLabel>
@@ -110,9 +103,9 @@ const Checkout = () => {
                     color="primary"
                     variant="contained"
                     sx={{
-                      backgroundColor: shades.primary[200],
+                      backgroundColor: (theme) => theme.palette.secondary.dark,
                       boxShadow: "none",
-                      color: "white",
+                      color: "common.white",
                       borderRadius: 0,
                       padding: "15px 40px",
                     }}
@@ -127,9 +120,9 @@ const Checkout = () => {
                   color="primary"
                   variant="contained"
                   sx={{
-                    backgroundColor: shades.primary[400],
+                    backgroundColor: (theme) => theme.palette.secondary.dark,
                     boxShadow: "none",
-                    color: "white",
+                    color: "common.white",
                     borderRadius: 0,
                     padding: "15px 40px",
                   }}
@@ -156,17 +149,6 @@ const initialValues = {
     state: "",
     zipCode: "",
   },
-  shippingAddress: {
-    isSameAddress: true,
-    firstName: "",
-    lastName: "",
-    country: "",
-    street1: "",
-    street2: "",
-    city: "",
-    state: "",
-    zipCode: "",
-  },
   email: "",
   phoneNumber: "",
 };
@@ -183,41 +165,9 @@ const checkoutSchema = [
       state: yup.string().required("required"),
       zipCode: yup.string().required("required"),
     }),
-    shippingAddress: yup.object().shape({
-      isSameAddress: yup.boolean(),
-      firstName: yup.string().when("isSameAddress", {
-        is: false,
-        then: yup.string().required("required"),
-      }),
-      lastName: yup.string().when("isSameAddress", {
-        is: false,
-        then: yup.string().required("required"),
-      }),
-      country: yup.string().when("isSameAddress", {
-        is: false,
-        then: yup.string().required("required"),
-      }),
-      street1: yup.string().when("isSameAddress", {
-        is: false,
-        then: yup.string().required("required"),
-      }),
-      street2: yup.string(),
-      city: yup.string().when("isSameAddress", {
-        is: false,
-        then: yup.string().required("required"),
-      }),
-      state: yup.string().when("isSameAddress", {
-        is: false,
-        then: yup.string().required("required"),
-      }),
-      zipCode: yup.string().when("isSameAddress", {
-        is: false,
-        then: yup.string().required("required"),
-      }),
-    }),
   }),
   yup.object().shape({
-    email: yup.string().required("required"),
+    email: yup.string().required("required").email("invalid email"),
     phoneNumber: yup.string().required("required"),
   }),
 ];

@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import AddToCart from "../addTocart/AddToCart";
 import WatchTrailer from "../watchTrailer/WatchTrailer";
 
-function ItemAction({ handleAddToCart }) {
+function ItemAction({ handleAddToCart, videoLink }) {
   return (
     <Box
       display={"flex"}
@@ -14,9 +14,9 @@ function ItemAction({ handleAddToCart }) {
     >
       <AddToCart
         onClick={handleAddToCart}
-        sx={{ background: shades.primary[300], color: "white" }}
+        sx={{ background: shades.primary[300], color: "common.white" }}
       />
-      <WatchTrailer />
+      <WatchTrailer videoLink={videoLink} />
     </Box>
   );
 }

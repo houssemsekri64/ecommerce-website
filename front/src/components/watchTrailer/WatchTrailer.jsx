@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import TrailerModal from "./TrailerModal";
-function WatchTrailer() {
+function WatchTrailer({ videoLink }) {
   const [open, setOpen] = useState(false);
-  const videoUrl = "https://www.youtube.com/embed/KwSLfOoU9sc";
+
+  const video = `https://www.youtube.com/embed/${videoLink}`;
 
   return (
     <Box display={"flex"} justifyContent={"space-between"}>
-      <Button variant="contained" onClick={() => setOpen(true)}>
+      <Button
+        variant="contained"
+        onClick={() => setOpen(true)}
+        color="secondary"
+      >
         <YouTubeIcon />{" "}
         <Typography variant="subtitle2" ml={0.5}>
           Watch trailer
@@ -17,7 +22,7 @@ function WatchTrailer() {
       <TrailerModal
         open={open}
         onClose={() => setOpen(false)}
-        videoUrl={videoUrl}
+        videoUrl={video}
       />
     </Box>
   );

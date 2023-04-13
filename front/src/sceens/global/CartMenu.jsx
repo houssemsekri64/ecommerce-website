@@ -38,7 +38,7 @@ function CartMenu() {
   }, 0);
   return (
     <Drawer
-      anchor="right"
+      anchor="top"
       open={isCartOpen}
       onClose={() => dispatch(setIsCartOpen({}))}
     >
@@ -47,7 +47,7 @@ function CartMenu() {
         right={"0"}
         top={"0"}
         width={"max(400px,30%)"}
-        backgroundColor="white"
+        backgroundColor="background.default"
         height={"100%"}
       >
         <Box padding={"30px"} overflow={"auto"} height={"100%"}>
@@ -85,7 +85,7 @@ function CartMenu() {
                         </IconButton>
                       </FlexBox>
                       <Typography>
-                        {item.attributes.shortDescription}
+                        {item.attributes.shortDescription.slice(0, 70)} ...
                       </Typography>
                       <FlexBox m="15px 0">
                         <Box
@@ -127,8 +127,8 @@ function CartMenu() {
             </FlexBox>
             <Button
               sx={{
-                background: shades.primary[400],
-                color: "white",
+                background: (theme) => theme.palette.secondary.dark,
+                color: "commoun.white",
                 borderRadius: 0,
                 minWidth: "100%",
                 padding: "20px 40px",
