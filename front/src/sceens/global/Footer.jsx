@@ -4,9 +4,6 @@ import { shades } from "../../theme";
 import Logo from "../../components/logo/Logo";
 
 function Footer() {
-  const {
-    palette: { neutral },
-  } = useTheme();
   return (
     <Box
       margin={"auto"}

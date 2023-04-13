@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import Item from "../../../../components/item/Item";
 
-function ItemGrid({ items, loading }) {
+function ItemGrid({ items, loading, handleButtonClick }) {
   const [page, setPage] = useState(1);
   const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
   let filteredItems = items.slice((page - 1) * 8, page * 8);
@@ -57,7 +57,10 @@ function ItemGrid({ items, loading }) {
           </>
         )}
       </Box>
-      <Box sx={{ margin: "0 auto", width: "300px", pt: 3 }}>
+      <Box
+        sx={{ margin: "0 auto", width: "300px", pt: 3 }}
+        onClick={() => handleButtonClick()}
+      >
         <Pagination
           count={Math.ceil(items.length / 8)}
           onChange={handleChange}
