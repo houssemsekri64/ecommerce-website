@@ -2,60 +2,30 @@ import { Box, CircularProgress, Skeleton, Typography } from "@mui/material";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Item from "../../components/item/Item";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import { addToCart } from "../../state";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "../../components/ui/Image";
 import ItemAction from "../../components/item/ItemAction";
-
+import { useItem } from "../../hooks/useItem";
+import { useItems } from "../../hooks/useItems";
 const ItemDetails = () => {
+  const [value, setValue] = useState("");
   const dispatch = useDispatch();
   const { itemId } = useParams();
-  const [value, setValue] = useState("description");
-  const [loading, setLoading] = useState(true);
-  const [item, setItem] = useState();
-  const [items, setItems] = useState([]);
   const cart = useSelector((state) => state.cart.cart);
-
+  const { data, isLoading } = useItem(itemId);
+  const { data: dataItem } = useItems(1);
+  let item = data?.data;
+  let items = dataItem?.data;
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  async function getItem() {
-    setLoading(true);
-    const item = await fetch(
-      `${process.env.REACT_APP_SERVER}/api/items/${itemId}?populate=image`,
-      {
-        method: "GET",
-      }
-    );
-    const itemJson = await item.json();
-    setItem(itemJson.data);
-    setLoading(false);
-  }
-
-  async function getItems() {
-    const items = await fetch(
-      `${process.env.REACT_APP_SERVER}/api/items?populate=image`,
-      {
-        method: "GET",
-      }
-    );
-    const itemsJson = await items.json();
-    setItems(itemsJson.data);
-  }
-
-  useEffect(() => {
-    getItem();
-    getItems();
-  }, [itemId]); // eslint-disable-line react-hooks/exhaustive-deps
-  console.log(item);
-
   return (
     <Box width="80%" m="80px auto">
-      {loading ? (
+      {isLoading ? (
         <>
           <Box
             display={"flex"}
@@ -187,7 +157,7 @@ const ItemDetails = () => {
           columnGap="1.33%"
           justifyContent="space-between"
         >
-          {items.slice(3, 7).map((item, i) => (
+          {items?.slice(3, 7).map((item, i) => (
             <Item width={"300px"} key={`${item.name}-${i}`} item={item} />
           ))}
         </Box>

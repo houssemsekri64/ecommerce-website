@@ -2,39 +2,25 @@ import React, { useState } from "react";
 import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Link, useNavigate } from "react-router-dom";
+import { useItembyName } from "../../hooks/useItembyName";
 function Search() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(null);
+  const { data } = useItembyName(searchTerm);
   const handleInputChange = (event) => {
     const value = event.target.value;
-    setSearchTerm(value);
     setTimeout(() => {
       if (value?.length >= 2) {
-        setLoading(true);
-        fetchResults(value);
-      } else {
-        setSearchResults([]);
+        setSearchTerm(value);
       }
     }, 500);
   };
-  const fetchResults = async (query) => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_SERVER}/api/items?populate=image&filters[name][$containsi]=${query}`
-      );
-      const responseJson = await response.json();
-      setSearchResults(responseJson.data);
-      setLoading(false);
-    } catch (error) {}
-  };
+
   return (
     <>
       <Autocomplete
         fullWidth
-        loading={loading}
         loadingText="loading ....."
-        options={searchResults}
+        options={data ? data : []}
         getOptionLabel={(option) => option.attributes.name}
         popupIcon={<SearchIcon />}
         sx={{

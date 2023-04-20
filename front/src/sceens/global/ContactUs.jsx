@@ -1,12 +1,12 @@
 import {
   Box,
   Typography,
-  Paper,
   TextField,
   Button,
   Alert,
   useMediaQuery,
 } from "@mui/material";
+import { useContact } from "../../hooks/useContact";
 import { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
@@ -21,13 +21,46 @@ const validationSchema = Yup.object().shape({
   phone: Yup.number().required("Phone is required"),
   message: Yup.string().required("Message is required"),
 });
-
 function ContactUs() {
+  let isSubmitting = false;
   const initialValue = {
     severty: "",
     message: "",
   };
   const [alertMessage, setAlertMessage] = useState(initialValue);
+  const MessageSucces = () => {
+    isSubmitting = false;
+    setAlertMessage({
+      severty: "success",
+      message: "your message send with success",
+    });
+
+    setTimeout(() => {
+      setAlertMessage(initialValue);
+    }, 4000);
+  };
+  const MessageFailed = () => {
+    isSubmitting = false;
+    setAlertMessage({
+      severty: "error",
+      message: "something whent wrong",
+    });
+  };
+  const { mutate } = useContact(MessageSucces, MessageFailed);
+  const handleSubmit = (values, { resetForm }) => {
+    setTimeout(() => {
+      const valuesSend = {
+        data: { ...values },
+      };
+      isSubmitting = true;
+
+      mutate({
+        ...JSON.stringify(valuesSend),
+      });
+      resetForm();
+    }, 400);
+  };
+
   const isNonMobile = useMediaQuery("(min-width:600px)");
   return (
     <Box
@@ -67,36 +100,7 @@ function ContactUs() {
               message: "",
             }}
             validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              setTimeout(() => {
-                console.log(values);
-                const valuesSend = {
-                  data: { ...values },
-                };
-                fetch(`${process.env.REACT_APP_SERVER}/api/contacts`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(valuesSend),
-                })
-                  .then((res) => {
-                    setSubmitting(false);
-                    setAlertMessage({
-                      severty: "success",
-                      message: "your message send with success",
-                    });
-                    setTimeout(() => {
-                      setAlertMessage(initialValue);
-                    }, 4000);
-                  })
-                  .catch((err) => {
-                    setSubmitting(false);
-                    setAlertMessage({
-                      severty: "error",
-                      message: "something whent wrong",
-                    });
-                  });
-              }, 400);
-            }}
+            onSubmit={handleSubmit}
           >
             {({ errors, touched, isSubmitting, handleChange }) => (
               <Form>

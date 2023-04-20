@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, Suspense } from "react";
-import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
-import { shades } from "../../theme";
+import React, { useCallback } from "react";
+import { Box, useMediaQuery } from "@mui/material";
+
 import Image from "../../components/ui/Image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";

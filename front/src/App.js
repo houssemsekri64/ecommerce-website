@@ -8,6 +8,7 @@ import Navbar from "./sceens/global/Navbar";
 import CartMenu from "./sceens/global/CartMenu";
 import Footer from "./sceens/global/Footer";
 import ContactUs from "./sceens/global/ContactUs";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => {
@@ -15,23 +16,26 @@ const ScrollToTop = () => {
   }, [pathname]);
   return null;
 };
+const queryClient = new QueryClient();
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Navbar />
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="item/:itemId" element={<ItemDetails />} />
-          <Route path="checkout" element={<Checkout />} />
-          <Route path="checkout/success" element={<Confirmation />} />
-        </Routes>
-        <CartMenu />
-        <ContactUs />
-        <Footer />
-      </BrowserRouter>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div className="App">
+        <BrowserRouter>
+          <Navbar />
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="item/:itemId" element={<ItemDetails />} />
+            <Route path="checkout" element={<Checkout />} />
+            <Route path="checkout/success" element={<Confirmation />} />
+          </Routes>
+          <CartMenu />
+          <ContactUs />
+          <Footer />
+        </BrowserRouter>
+      </div>
+    </QueryClientProvider>
   );
 }
 

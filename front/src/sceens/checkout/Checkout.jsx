@@ -3,15 +3,20 @@ import { Box, Button, Stepper, Step, StepLabel } from "@mui/material";
 import { Formik } from "formik";
 import { useState } from "react";
 import * as yup from "yup";
-import { shades } from "../../theme";
 import Payment from "./Payment";
 import Shipping from "./Shipping";
 import { loadStripe } from "@stripe/stripe-js";
-const stripePromise = loadStripe(
-  "pk_test_51MuRaQFGxb4Z0jtBTEZCMXLVFF3Y5evg8mQntkb9dd1oKrnxs2F6NGhftPBz8vSEkDMNrvJufgVsmkxuwQyS28z200G4YJ7hjL"
-);
+import { useOrder } from "../../hooks/useOrder";
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE);
 
 const Checkout = () => {
+  const orderSucess = (data) => {
+    console.log(data);
+    stripePromise.then((stripe) =>
+      stripe.redirectToCheckout({ sessionId: data.id })
+    );
+  };
+  const { mutate } = useOrder(orderSucess);
   const [activeStep, setActiveStep] = useState(0);
   const cart = useSelector((state) => state.cart.cart);
   const isFirstStep = activeStep === 0;
@@ -28,7 +33,6 @@ const Checkout = () => {
   };
 
   async function makePayment(values) {
-    const stripe = await stripePromise;
     const requestBody = {
       userName: [values.firstName, values.lastName].join(" "),
       email: values.email,
@@ -37,16 +41,9 @@ const Checkout = () => {
         count,
       })),
     };
-
-    const response = await fetch(`${process.env.REACT_APP_SERVER}/api/orders`, {
-      method: "POST",
-      mode: "cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    });
-    const session = await response.json();
-    await stripe.redirectToCheckout({
-      sessionId: session.id,
+    console.log(requestBody);
+    mutate({
+      ...requestBody,
     });
   }
 

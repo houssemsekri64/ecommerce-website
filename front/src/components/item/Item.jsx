@@ -66,13 +66,16 @@ function Item({ item, width }) {
         videoLink={video}
       />
       <Box mt="3px">
-        <Typography variant="subtitle2" color={"common.white"}>
+        <Typography variant="subtitle2" color={"common.white"} mt={1}>
           {category
             .replace(/([A-Z])/g, " $1")
             .replace(/^ ./, (str) => str.toUpperCase())}
         </Typography>
-        <Typography> {name} </Typography>
-        <Typography fontWeight={"bold"}> ${price} </Typography>
+        <Typography mt={1}> {name} </Typography>
+        <Typography fontWeight={"bold"} mt={1}>
+          {" "}
+          ${price}{" "}
+        </Typography>
       </Box>
     </Paper>
   );

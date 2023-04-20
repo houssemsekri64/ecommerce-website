@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import {
@@ -9,17 +9,23 @@ import {
   Typography,
 } from "@mui/material";
 import Item from "../../../../components/item/Item";
+import { useItems } from "../../../../hooks/useItems";
 
-function ItemGrid({ items, loading, handleButtonClick }) {
+function ItemGrid({ handleButtonClick }) {
   const [page, setPage] = useState(1);
+  const { data, isLoading } = useItems(page);
   const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
-  let filteredItems = items.slice((page - 1) * 8, page * 8);
+  let items = data?.data;
+  let meta = data?.meta;
+  if (meta) {
+    console.log(meta);
+  }
   const handleChange = (e, p) => {
     setPage(p);
   };
   return (
     <Box>
-      {loading && (
+      {isLoading && (
         <Box
           display={"flex"}
           alignItems={"center"}
@@ -41,7 +47,7 @@ function ItemGrid({ items, loading, handleButtonClick }) {
         columnGap={"1.33%"}
         ref={parent}
       >
-        {loading ? (
+        {isLoading ? (
           <>
             <Skeleton variant="rectangular" width={"100%"} height={"200px"} />
             <Skeleton variant="rectangular" width={"100%"} height={"200px"} />
@@ -50,8 +56,8 @@ function ItemGrid({ items, loading, handleButtonClick }) {
           </>
         ) : (
           <>
-            {filteredItems &&
-              filteredItems.map((item) => {
+            {items &&
+              items.map((item) => {
                 return <Item item={item} key={`${item.name}-${item.id}`} />;
               })}
           </>
@@ -62,7 +68,7 @@ function ItemGrid({ items, loading, handleButtonClick }) {
         onClick={() => handleButtonClick()}
       >
         <Pagination
-          count={Math.ceil(items.length / 8)}
+          count={meta?.pagination.pageCount}
           onChange={handleChange}
         />
       </Box>
